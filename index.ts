@@ -63,10 +63,6 @@ class RootStack extends cdk.Stack {
       vpcSubnets: { subnetType: ec2.SubnetType.PRIVATE_WITH_NAT },
       runtime: lambda.Runtime.NODEJS_16_X,
       handler: 'handler',
-      environment: {
-        // @ts-ignore
-        DB_SECRET: database.secret?.secretValue,
-      },
     });
 
     database.connections.allowFrom(lambdaFn, ec2.Port.tcp(database.clusterEndpoint.port));
