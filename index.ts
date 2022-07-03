@@ -54,6 +54,9 @@ class RootStack extends cdk.Stack {
     });
 
     const lambdaFn = new NodejsFunction(this, `${prefix}-lambda`, {
+      bundling: {
+        externalModules: ["tedious", "pg-native"]
+      },
       entry: path.join(__dirname, 'server.ts'),
       depsLockFilePath: path.join(__dirname, "package-lock.json"),
       vpc,
