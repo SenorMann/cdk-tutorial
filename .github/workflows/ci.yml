@@ -36,4 +36,4 @@ jobs:
             aws configure set default.region us-east-1
 
       - name: Deploy CDK App
-        run: npm run deploy
+        run: npm run destroy

@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "bootstrap": "cdk bootstrap",
-    "deploy": "cdk bootstrap && cdk deploy --require-approval never --verbose"
+    "deploy": "cdk bootstrap && cdk deploy --require-approval never --verbose",
+    "destoy": "cdk destroy"
   },
   "repository": {
     "type": "git",
