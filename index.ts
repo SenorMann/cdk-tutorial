@@ -64,7 +64,8 @@ class RootStack extends cdk.Stack {
       runtime: lambda.Runtime.NODEJS_16_X,
       handler: 'handler',
       environment: {
-        DB_SECRET: database.secret?.secretValue as any,
+        // @ts-ignore
+        DB_SECRET: database.secret?.secretValue,
       },
     });
 
