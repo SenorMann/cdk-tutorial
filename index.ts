@@ -3,7 +3,8 @@ import * as ec2 from "aws-cdk-lib/aws-ec2";
 import * as kms from "aws-cdk-lib/aws-kms";
 import * as rds from "aws-cdk-lib/aws-rds";
 import * as apiGateway from "aws-cdk-lib/aws-apigateway";
-import * as lambda from "aws-cdk-lib/aws-lambda-nodejs";
+import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
+import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as path from "path";
 
 
@@ -52,11 +53,13 @@ class RootStack extends cdk.Stack {
       storageEncryptionKey: kmsKey,
     });
 
-    const lambdaFn = new lambda.NodejsFunction(this, `${prefix}-lambda`, {
+    const lambdaFn = new NodejsFunction(this, `${prefix}-lambda`, {
       entry: path.join(__dirname, 'server.ts'),
       depsLockFilePath: path.join(__dirname, "package-lock.json"),
       vpc,
       vpcSubnets: { subnetType: ec2.SubnetType.PRIVATE_WITH_NAT },
+      runtime: lambda.Runtime.NODEJS_16_X,
+      handler: 'handler',
       environment: {
         DB_SECRET: database.secret?.secretValue.toJSON(),
       },
