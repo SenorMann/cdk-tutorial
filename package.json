@@ -1,0 +1,33 @@
+{
+  "name": "cdk-tutorial",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "bootstrap": "cdk bootstrap",
+    "deploy": "cdk bootstrap && cdk deploy --require-approval never --verbose"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SenorMann/cdk-tutorial.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SenorMann/cdk-tutorial/issues"
+  },
+  "homepage": "https://github.com/SenorMann/cdk-tutorial#readme",
+  "devDependencies": {
+    "@types/express": "^4.17.13",
+    "aws-cdk": "^2.30.0",
+    "ts-node": "^10.8.2",
+    "typescript": "^4.7.4"
+  },
+  "dependencies": {
+    "@lhci/server": "^0.9.0",
+    "aws-cdk-lib": "^2.30.0",
+    "express": "^4.18.1",
+    "serverless-http": "^3.0.1"
+  }
+}
