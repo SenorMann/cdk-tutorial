@@ -3,13 +3,9 @@ import serverless from 'serverless-http';
 //@ts-ignore
 import { createApp } from '@lhci/server';
 
-
-
 let server: serverless.Handler;
 const secrets = new AWS.SecretsManager({});
 
-const databaseSecret = JSON.parse(process.env.DB_SECRET || "");
-const { hostname, username, password, dbname, port } = databaseSecret;
 
 export async function handler(event: any, context: any) {
   if (server) return server(event, context);
@@ -20,7 +16,7 @@ export async function handler(event: any, context: any) {
       storageMethod: 'sql',
       sqlDialect: 'postgres',
       sqlConnectionSsl: true,
-      sqlConnectionUrl: `postgresql://${username}:${password}@${hostname}:${port}/${dbname}`,
+      sqlConnectionUrl: `postgresql://${username}:${password}@${host}:${port}/${dbname}`,
       sqlDialectOptions: {
         ssl: true,
       },

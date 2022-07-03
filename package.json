@@ -6,7 +6,7 @@
   "scripts": {
     "bootstrap": "cdk bootstrap",
     "deploy": "cdk bootstrap && cdk deploy --require-approval never --verbose",
-    "destroy": "cdk destroy"
+    "destroy": "cdk destroy --force"
   },
   "repository": {
     "type": "git",
