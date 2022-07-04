@@ -35,14 +35,14 @@ class RootStack extends cdk.Stack {
       ],
     });
 
-    const kmsKey = new kms.Key(this, 'MyKey', {
-      enableKeyRotation: true,
-    });
+    // const kmsKey = new kms.Key(this, 'MyKey', {
+    //   enableKeyRotation: true,
+    // });
 
-    const credentials = new rds.DatabaseSecret(this, `${prefix}-db-credentials`, {
-      secretName: `${prefix}/db-credentials`,
-      username: 'lh_user',
-    });
+    // const credentials = new rds.DatabaseSecret(this, `${prefix}-db-credentials`, {
+    //   secretName: `${prefix}/db-credentials`,
+    //   username: 'lh_user',
+    // });
 
     // const database = new rds.ServerlessCluster(this, `${prefix}-database-cluster`, {
     //   vpc,
@@ -53,22 +53,22 @@ class RootStack extends cdk.Stack {
     //   storageEncryptionKey: kmsKey,
     // });
 
-    const database = new rds.DatabaseInstance(this, `${prefix}-database`, {
-      vpcSubnets: {
-        subnetType: ec2.SubnetType.PRIVATE_ISOLATED,
-      },
-      credentials: rds.Credentials.fromSecret(credentials),
-      vpc,
-      databaseName: `lighthouse`,
-      engine: rds.DatabaseInstanceEngine.postgres({ version: rds.PostgresEngineVersion.VER_14_2 }),
-      instanceType: ec2.InstanceType.of(ec2.InstanceClass.T3, ec2.InstanceSize.MICRO),
-      preferredBackupWindow: "02:00-03:00",
-      preferredMaintenanceWindow: "Sun:03:00-Sun:04:00",
-      storageEncrypted: true,
-      storageEncryptionKey: kmsKey,
-      removalPolicy:  cdk.RemovalPolicy.DESTROY,
-      backupRetention: cdk.Duration.days(0),
-    })
+    // const database = new rds.DatabaseInstance(this, `${prefix}-database`, {
+    //   vpcSubnets: {
+    //     subnetType: ec2.SubnetType.PRIVATE_ISOLATED,
+    //   },
+    //   credentials: rds.Credentials.fromSecret(credentials),
+    //   vpc,
+    //   databaseName: `lighthouse`,
+    //   engine: rds.DatabaseInstanceEngine.postgres({ version: rds.PostgresEngineVersion.VER_14_2 }),
+    //   instanceType: ec2.InstanceType.of(ec2.InstanceClass.T3, ec2.InstanceSize.MICRO),
+    //   preferredBackupWindow: "02:00-03:00",
+    //   preferredMaintenanceWindow: "Sun:03:00-Sun:04:00",
+    //   storageEncrypted: true,
+    //   storageEncryptionKey: kmsKey,
+    //   removalPolicy:  cdk.RemovalPolicy.DESTROY,
+    //   backupRetention: cdk.Duration.days(0),
+    // })
 
     const lambdaFn = new NodejsFunction(this, `${prefix}-lambda`, {
       bundling: {
@@ -82,8 +82,8 @@ class RootStack extends cdk.Stack {
       handler: 'handler',
     });
 
-    database.connections.allowFrom(lambdaFn, ec2.Port.tcp(database.instanceEndpoint.port));
-    credentials.grantRead(lambdaFn);
+    // database.connections.allowFrom(lambdaFn, ec2.Port.tcp(database.instanceEndpoint.port));
+    // credentials.grantRead(lambdaFn);
     const api = new apiGateway.LambdaRestApi(this, `${prefix}-api-gateway`, {
       handler: lambdaFn,
       proxy: true,
