@@ -97,3 +97,4 @@ class RootStack extends cdk.Stack {
 
 const app = new cdk.App();
 new RootStack(app, `${prefix}-stack`);
+app.synth()
