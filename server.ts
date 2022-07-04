@@ -17,7 +17,6 @@ export async function handler(event: any, context: any) {
       sqlDialect: 'postgres',
       sqlConnectionSsl: true,
       // sqlConnectionUrl: `postgresql://${username}:${password}@${host}:${port}/${dbname}`,
-      sqlConnectionUrl: 'postgres://budmujsk:DCtjRQtZGIDHgpCIxS-UuPvSuAaSpQti@tyke.db.elephantsql.com/budmujsk',
       sqlDialectOptions: {
         ssl: true,
       },
