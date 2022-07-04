@@ -59,7 +59,7 @@ class RootStack extends cdk.Stack {
       },
       credentials: rds.Credentials.fromSecret(credentials),
       vpc,
-      databaseName: `${prefix}_db`,
+      databaseName: `lighthouse`,
       engine: rds.DatabaseInstanceEngine.postgres({ version: rds.PostgresEngineVersion.VER_14_2 }),
       instanceType: ec2.InstanceType.of(ec2.InstanceClass.T3, ec2.InstanceSize.MICRO),
       preferredBackupWindow: "02:00-03:00",
