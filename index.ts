@@ -35,23 +35,23 @@ class RootStack extends cdk.Stack {
       ],
     });
 
-    // const kmsKey = new kms.Key(this, 'MyKey', {
-    //   enableKeyRotation: true,
-    // });
+    const kmsKey = new kms.Key(this, 'MyKey', {
+      enableKeyRotation: true,
+    });
 
-    // const credentials = new rds.DatabaseSecret(this, `${prefix}-db-credentials`, {
-    //   secretName: `${prefix}/db-credentials`,
-    //   username: 'lh_user',
-    // });
+    const credentials = new rds.DatabaseSecret(this, `${prefix}-db-credentials`, {
+      secretName: `${prefix}/db-credentials`,
+      username: 'lh_user',
+    });
 
-    // const database = new rds.ServerlessCluster(this, `${prefix}-database-cluster`, {
-    //   vpc,
-    //   vpcSubnets:  { subnetType: ec2.SubnetType.PRIVATE_ISOLATED },
-    //   engine: rds.DatabaseClusterEngine.auroraPostgres({ version: rds.AuroraPostgresEngineVersion.VER_10_11 }),
-    //   credentials: rds.Credentials.fromSecret(credentials),
-    //   defaultDatabaseName: 'lighthouse',
-    //   storageEncryptionKey: kmsKey,
-    // });
+    const database = new rds.ServerlessCluster(this, `${prefix}-database-cluster`, {
+      vpc,
+      vpcSubnets:  { subnetType: ec2.SubnetType.PRIVATE_ISOLATED },
+      engine: rds.DatabaseClusterEngine.auroraPostgres({ version: rds.AuroraPostgresEngineVersion.VER_10_11 }),
+      credentials: rds.Credentials.fromSecret(credentials),
+      defaultDatabaseName: 'lighthouse',
+      storageEncryptionKey: kmsKey,
+    });
 
     // const database = new rds.DatabaseInstance(this, `${prefix}-database`, {
     //   vpcSubnets: {
@@ -71,19 +71,19 @@ class RootStack extends cdk.Stack {
     // })
 
     const lambdaFn = new NodejsFunction(this, `${prefix}-lambda`, {
-      bundling: {
-        externalModules: ["tedious", "pg-native"]
-      },
-      entry: path.join(__dirname, 'server.ts'),
-      depsLockFilePath: path.join(__dirname, "package-lock.json"),
+      entry: path.join(__dirname, './server.ts'),
+      depsLockFilePath: path.join(__dirname, "./package-lock.json"),
       vpc,
       vpcSubnets: { subnetType: ec2.SubnetType.PRIVATE_WITH_NAT },
       runtime: lambda.Runtime.NODEJS_16_X,
       handler: 'handler',
+      environment: {
+        SECRET_NAME: credentials.secretName,
+      }
     });
 
-    // database.connections.allowFrom(lambdaFn, ec2.Port.tcp(database.instanceEndpoint.port));
-    // credentials.grantRead(lambdaFn);
+    database.connections.allowFrom(lambdaFn, ec2.Port.tcp(database.clusterEndpoint.port));
+    credentials.grantRead(lambdaFn);
     const api = new apiGateway.LambdaRestApi(this, `${prefix}-api-gateway`, {
       handler: lambdaFn,
       proxy: true,
