@@ -7,24 +7,29 @@ const secrets = new AWS.SecretsManager({});
 const secretName = process.env.SECRET_NAME;
 
 
-exports.handler = async (event, context) => {
-  if (server) return server(event, context);
+exports.handler = async (event, context, callback) => {
+  try {
+    if (server) return server(event, context);
 
-  const { host, port, dbname, username, password } = await getSecretValue(secretName);
-  const { app } = await createApp({
-    storage: {
-      storageMethod: 'sql',
-      sqlDialect: 'postgres',
-      sqlConnectionSsl: true,
-      sqlConnectionUrl: `postgresql://${username}:${password}@${host}:${port}/${dbname}`,
-      sqlDialectOptions: {
-        ssl: true,
-      },
-    }
-  });
-  server = serverless(app);
-  const result = await server(event, context);
-  return result;
+    const { host, port, dbname, username, password } = await getSecretValue(secretName);
+    const { app } = await createApp({
+      storage: {
+        storageMethod: 'sql',
+        sqlDialect: 'postgres',
+        sqlConnectionSsl: true,
+        sqlConnectionUrl: `postgresql://${username}:${password}@${host}:${port}/${dbname}`,
+        sqlDialectOptions: {
+          ssl: true,
+        },
+      }
+    });
+    server = serverless(app);
+    const result = await server(event, context);
+    return result;
+  } catch (err) {
+    console.error(err);
+    callback(err);
+  }
 }
 
 
