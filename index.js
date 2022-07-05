@@ -1,17 +1,17 @@
-import * as cdk from "aws-cdk-lib";
-import * as ec2 from "aws-cdk-lib/aws-ec2";
-import * as kms from "aws-cdk-lib/aws-kms";
-import * as rds from "aws-cdk-lib/aws-rds";
-import * as apiGateway from "aws-cdk-lib/aws-apigateway";
-import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
-import * as lambda from "aws-cdk-lib/aws-lambda";
-import * as path from "path";
+const cdk = require("aws-cdk-lib");
+const ec2 = require("aws-cdk-lib/aws-ec2");
+const kms = require("aws-cdk-lib/aws-kms");
+const rds = require("aws-cdk-lib/aws-rds");
+const apiGateway = require("aws-cdk-lib/aws-apigateway");
+const { NodejsFunction } = require("aws-cdk-lib/aws-lambda-nodejs");
+const lambda = require("aws-cdk-lib/aws-lambda");
+const path = require("path");
 
 
 const prefix = 'lighthouse-server';
 
 class RootStack extends cdk.Stack {
-  constructor(app: cdk.App, name: string, props?: cdk.StackProps) {
+  constructor(app, name, props) {
     super(app, name, props);
     const vpc = new ec2.Vpc(this, `${prefix}-vpc`, {
       cidr: "10.0.0.0/16",
@@ -57,7 +57,7 @@ class RootStack extends cdk.Stack {
     //   vpcSubnets: {
     //     subnetType: ec2.SubnetType.PRIVATE_ISOLATED,
     //   },
-    //   credentials: rds.Credentials.fromSecret(credentials),
+    //   credentials: rds.Credentials.= require(ecret(credentials),
     //   vpc,
     //   databaseName: `lighthouse`,
     //   engine: rds.DatabaseInstanceEngine.postgres({ version: rds.PostgresEngineVersion.VER_14_2 }),
@@ -82,7 +82,7 @@ class RootStack extends cdk.Stack {
       }
     });
 
-    database.connections.allowFrom(lambdaFn, ec2.Port.tcp(database.clusterEndpoint.port));
+    database.connections.allow= require(lambdaFn, ec2.Port.tcp(database.clusterEndpoint.port));
     credentials.grantRead(lambdaFn);
     const api = new apiGateway.LambdaRestApi(this, `${prefix}-api-gateway`, {
       handler: lambdaFn,
