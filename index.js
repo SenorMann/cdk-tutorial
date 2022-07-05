@@ -82,16 +82,12 @@ class RootStack extends cdk.Stack {
       }
     });
 
-    database.connections.allow= require(lambdaFn, ec2.Port.tcp(database.clusterEndpoint.port));
+    database.connections.allowFrom(lambdaFn, ec2.Port.tcp(database.clusterEndpoint.port));
     credentials.grantRead(lambdaFn);
-    const api = new apiGateway.LambdaRestApi(this, `${prefix}-api-gateway`, {
+    new apiGateway.LambdaRestApi(this, `${prefix}-api-gateway`, {
       handler: lambdaFn,
       proxy: true,
     })
-
-    new cdk.CfnOutput(this, `${prefix}-api-gateway-url`, {
-      value: api.url,
-    });
   }
 }
 
