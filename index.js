@@ -71,7 +71,7 @@ class RootStack extends cdk.Stack {
     // })
 
     const lambdaFn = new NodejsFunction(this, `${prefix}-lambda`, {
-      entry: path.join(__dirname, './server.ts'),
+      entry: path.join(__dirname, './server.js'),
       depsLockFilePath: path.join(__dirname, "./package-lock.json"),
       vpc,
       vpcSubnets: { subnetType: ec2.SubnetType.PRIVATE_WITH_NAT },
