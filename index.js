@@ -70,17 +70,28 @@ class RootStack extends cdk.Stack {
     //   backupRetention: cdk.Duration.days(0),
     // })
 
-    const lambdaFn = new NodejsFunction(this, `${prefix}-lambda`, {
-      entry: path.join(__dirname, './server.js'),
-      depsLockFilePath: path.join(__dirname, "./package-lock.json"),
+    // const lambdaFn = new NodejsFunction(this, `${prefix}-lambda`, {
+    //   entry: path.join(__dirname, './server.js'),
+    //   depsLockFilePath: path.join(__dirname, "./package-lock.json"),
+    //   vpc,
+    //   vpcSubnets: { subnetType: ec2.SubnetType.PRIVATE_WITH_NAT },
+    //   runtime: lambda.Runtime.NODEJS_16_X,
+    //   handler: 'handler',
+    //   environment: {
+    //     SECRET_NAME: credentials.secretName,
+    //   }
+    // });
+
+    const lambdaFn = new lambda.DockerImageFunction(this, `${prefix}-docker-lambda`, {
+      code: lambda.DockerImageCode.fromImageAsset(path.join(__dirname), '.'),
       vpc,
       vpcSubnets: { subnetType: ec2.SubnetType.PRIVATE_WITH_NAT },
-      runtime: lambda.Runtime.NODEJS_16_X,
-      handler: 'handler',
       environment: {
         SECRET_NAME: credentials.secretName,
-      }
-    });
+      },
+      allowAllOutbound: true,
+      memorySize: 512,
+    }) 
 
     database.connections.allowFrom(lambdaFn, ec2.Port.tcp(database.clusterEndpoint.port));
     credentials.grantRead(lambdaFn);
