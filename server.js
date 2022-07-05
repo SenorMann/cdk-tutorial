@@ -7,7 +7,7 @@ const secrets = new AWS.SecretsManager({});
 const secretName = process.env.SECRET_NAME;
 
 
-export const handler = async (event, context) => {
+exports.handler = async (event, context) => {
   if (server) return server(event, context);
 
   const { host, port, dbname, username, password } = await getSecretValue(secretName);
