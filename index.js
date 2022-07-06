@@ -91,6 +91,7 @@ class RootStack extends cdk.Stack {
       },
       allowAllOutbound: true,
       memorySize: 512,
+      timeout: cdk.Duration.seconds(15),
     }) 
 
     database.connections.allowFrom(lambdaFn, ec2.Port.tcp(database.clusterEndpoint.port));
